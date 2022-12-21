@@ -1,14 +1,12 @@
-import json
-
-import requests
 
 from settings import *
 from gql import Client, gql
 from gql.transport.requests import RequestsHTTPTransport
 
+from zen_swimlane import SwimLane
 
 
-class ZenIssues:
+class ZenHub:
     def __init__(self):
 
         self.workspaceId = "61f7875ee7297e0016d92028"
@@ -88,20 +86,20 @@ class ZenIssues:
         return self.exec(query, params)
 
     def get_swim_lanes(self):
-        worspace = self.get_workspace()
+        workspace = self.get_workspace()
         swim_lanes = {}
-        for lane in data["workspace"]['pipelinesConnection']['nodes']:
-            swim_lanes[node['name']] = lane['issues']['nodes']
+        for lane in workspace["workspace"]['pipelinesConnection']['nodes']:
+            swim_lanes[swim_lane.id] = SwimLane(lane)
 
-
-
+        print(swim_lanes)
+        return swim_lanes
 
 
 
 
 
 if __name__ == '__main__':
-    zh = ZenIssues()
+    zh = ZenHub()
     print(zh.get_swim_lanes())
 
 """"
